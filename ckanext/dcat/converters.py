@@ -17,9 +17,17 @@ def dcat_to_ckan(dcat_dict):
         package_dict['tags'].append({'name': keyword})
 
     package_dict['extras'] = []
-    for key in ['issued', 'modified']:
+    for key in ['issued','modified']:
         package_dict['extras'].append({'key': 'dcat_{0}'.format(key), 'value': dcat_dict.get(key)})
 
+    # Bobby Augspurger 8/31/17 Add Extra Values
+    dcat_contactPoint = dcat_dict.get('contactPoint')
+    if isinstance(dcat_contactPoint, dict) and dcat_contactPoint.get('fn'):
+	package_dict['extras'].append({'key': 'dcat_contact_name', 'value': dcat_contactPoint.get(u'fn')})
+        package_dict['extras'].append({'key': 'dcat_contact_email', 'value': dcat_contactPoint.get(u'hasEmail')}) 
+
+    #package_dict['extras'].append({'key': 'dcat_contact_author', 'value': 'bobby'})
+    #end of additions
     package_dict['extras'].append({'key': 'guid', 'value': dcat_dict.get('identifier')})
 
     dcat_publisher = dcat_dict.get('publisher')
